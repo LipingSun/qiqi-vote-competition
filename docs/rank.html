@@ -8,7 +8,7 @@
 <div id="rank">加载中...</div>
 <script>
 
-  var cors_api_url = 'https://cors-proxy.htmldriven.com/?url=';
+  var cors_api_url = 'https://thingproxy.freeboard.io/fetch/';
   function doCORSRequest(options, printResult) {
     var x = new XMLHttpRequest();
     x.open(options.method, cors_api_url + options.url);
@@ -35,8 +35,8 @@
     url: "http://www.21gm.com.cn/api/gmhome/gmvotelist",
     data: data
   }, function printResult(result) {
-    const data = JSON.parse(result)
-    const sorted = data.data.sort((a, b) => b.pHits - a.pHits);
+    const data = JSON.parse(result).data;
+    const sorted = data.sort((a, b) => b.pHits - a.pHits);
 
     const topTen = sorted.slice(0, 10);
 
