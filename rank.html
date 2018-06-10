@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>排名</title>
+</head>
+<body>
+<div id="rank">加载中...</div>
+<script>
+
+  var cors_api_url = 'https://cors-anywhere.herokuapp.com/';
+  function doCORSRequest(options, printResult) {
+    var x = new XMLHttpRequest();
+    x.open(options.method, cors_api_url + options.url);
+    x.onload = x.onerror = function() {
+      printResult(x.responseText);
+    };
+    if (/^POST/i.test(options.method)) {
+      x.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    }
+    x.send(options.data);
+  }
+
+  const prettify = (babies) => (
+    babies.map(baby =>
+      `${baby.pBabyName}(${baby.pAuthorAge}岁): ${baby.pHits}`
+    ).join('<br/>')
+  );
+
+
+  var data = "size=1000";
+
+  doCORSRequest({
+    method: 'POST',
+    url: "http://www.21gm.com.cn/api/gmhome/gmvotelist",
+    data: data
+  }, function printResult(result) {
+    const data = JSON.parse(result)
+    const sorted = data.data.sort((a, b) => b.pHits - a.pHits);
+
+    const topTen = sorted.slice(0, 10);
+
+    const school = sorted.filter(baby => baby.pCompany.includes("金山") || baby.pCompany.includes("两江"));
+
+
+    const output = '全国前十：<br/>' + prettify(topTen) + '<br/><br/>学校里：<br/>' + prettify(school);
+    document.getElementById('rank').innerHTML = output;
+
+  });
+
+</script>
+</body>
+</html>
